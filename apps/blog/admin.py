@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Blog, Category
+from .models import Blog, Category, Comments
 
 class AdminBlog(admin.ModelAdmin):
     list_display = ('title', 'enabled')
@@ -10,3 +10,4 @@ class  AdminCategory(admin.ModelAdmin):
 
 admin.site.register(Blog, AdminBlog)
 admin.site.register(Category, AdminCategory)
+admin.site.register(Comments)

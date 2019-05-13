@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import Category, Blog
+from .models import Category, Blog, Comments
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -16,3 +16,7 @@ class BlogSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CommentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comments
+        fields = '__all__'
