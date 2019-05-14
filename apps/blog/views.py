@@ -5,7 +5,6 @@ from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
-from apps.blog.serializers import BlogAllSerializer
 from .models import Category, Blog, Comments
 from .serializers import CategorySerializer, BlogSerializer, CommentsSerializer
 
@@ -73,3 +72,7 @@ class CommentsCreate(GenericAPIView):
         )
         comments.save()
         return Response(CommentsSerializer(comments).data)
+
+
+
+a = Blog.objects
