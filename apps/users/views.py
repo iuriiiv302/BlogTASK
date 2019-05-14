@@ -1,11 +1,11 @@
 # Create your views here.
 from django.contrib.auth.models import User
 from drf_util.decorators import serialize_decorator
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from apps.users.serializers import UserSerializer
+from apps.users.serializers import UserSerializer, UserInfoSerializers
 
 
 class RegisterUserView(GenericAPIView):
@@ -28,3 +28,13 @@ class RegisterUserView(GenericAPIView):
         user.save()
 
         return Response(UserSerializer(user).data)
+
+class UserInfo(GenericAPIView):
+    serializer_class = UserInfoSerializers
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
+
+    def get(self, request, pk):
+        user = get_object_or_404(User.objects.filter(pk=pk))
+        response_data = UserInfoSerializers(user).data
+        return Response (response_data)

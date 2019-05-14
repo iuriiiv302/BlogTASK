@@ -10,8 +10,8 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = '__all__'
 
-class CommentsSerializer(serializers.ModelSerializer):
 
+class CommentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comments
         fields = ['comments_text', 'comments_blog']

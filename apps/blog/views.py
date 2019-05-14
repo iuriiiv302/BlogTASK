@@ -74,5 +74,3 @@ class CommentsCreate(GenericAPIView):
         return Response(CommentsSerializer(comments).data)
 
 
-
-a = Blog.objects

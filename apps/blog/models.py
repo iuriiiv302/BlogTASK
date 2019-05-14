@@ -1,8 +1,6 @@
 from django.db import models
 
 
-# Create your models here.
-
 class Category(models.Model):
     title = models.CharField(max_length=100, db_index=True)
     slug = models.SlugField(max_length=100, db_index=True)
@@ -21,7 +19,6 @@ class Comments(models.Model):
         db_table = "Comments"
     comments_text = models.TextField()
     comments_blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
-
 
 
     # def __str__(self):
