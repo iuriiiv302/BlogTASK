@@ -68,6 +68,9 @@ class BlogUpdate(GenericAPIView):
             blog = Blog.objects.get(id=data['id'])
             blog.title = data["title"]
             blog.body = data["body"]
+            blog.slug = data["slug"]
+            blog.category = data["category"]
+            blog.enabled = data["enabled"]
             blog.save()
             response_data = BlogSerializer(blog).data
             return Response(response_data)
