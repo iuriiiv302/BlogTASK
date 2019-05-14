@@ -1,6 +1,6 @@
 from django.urls import path
 
-from apps.blog.views import BlogUpdate
+from apps.blog.views import BlogUpdate, ComentsUbdate
 from .views import CategoryViewSet, BlogListView, BlogItemView, BlogCreate, CommentsCreate
 from rest_framework.routers import DefaultRouter
 
@@ -15,5 +15,6 @@ urlpatterns += [
     path('create/', BlogCreate.as_view(), name = 'create_blog'),
     path('comment/',CommentsCreate.as_view(), name= 'create_comments'),
     path('update_blog/',BlogUpdate.as_view(), name= 'update_blog'),
+    path('update_commit/', ComentsUbdate.as_view(), name= 'update_commit'),
 
 ]

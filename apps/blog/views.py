@@ -4,14 +4,16 @@ from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .models import Category, Blog, Comments
-from apps.blog.serializers import BlogUpdateSerializer
+from apps.blog.serializers import BlogUpdateSerializer, CommentsUpdateSerializer
 from .serializers import CategorySerializer, BlogSerializer, CommentsSerializer
 
-#CATEGORY
+
+# CATEGORY
 
 class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
+
 
 # BLOG
 class BlogListView(GenericAPIView):
@@ -56,6 +58,7 @@ class BlogCreate(GenericAPIView):
 
         return Response(BlogSerializer(blog).data)
 
+
 class BlogUpdate(GenericAPIView):
     serializer_class = BlogUpdateSerializer
     permission_classes = (AllowAny,)
@@ -74,6 +77,8 @@ class BlogUpdate(GenericAPIView):
             blog.save()
             response_data = BlogSerializer(blog).data
             return Response(response_data)
+        else:
+            return Response(serializer.errors, status=400)
 
 # COMENTS
 
@@ -94,3 +99,19 @@ class CommentsCreate(GenericAPIView):
         return Response(CommentsSerializer(comments).data)
 
 
+class ComentsUbdate(GenericAPIView):
+    serializer_class = CommentsUpdateSerializer
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
+
+    def put(self, request):
+        serializer = CommentsUpdateSerializer(data=request.data)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            comment = Comments.objects.get(id=data['id'])
+            comment.comments_text = data["comments_text"]
+            comment.save()
+            response_data = CommentsSerializer(comment).data
+            return Response(response_data)
+        else:
+            return Response(serializer.errors, status=400)

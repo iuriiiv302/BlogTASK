@@ -11,12 +11,29 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+# ----------------------------------------------------------------------------------------------
+
 class CommentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comments
         fields = ['comments_text', 'comments_blog']
 
 
+class CommentsUpdateSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+
+    def validate_id(self, value):
+        comment = Comments.objects.filter(id=value).first()
+        if not comment:
+            raise ValidationError("Not exists")
+        return value
+
+    class Meta:
+        model = Comments
+        fields = ['id', "comments_text"]
+
+
+# --------------------------------------------------------------------------------------------------
 class BlogSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
 
@@ -27,6 +44,7 @@ class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = ['title', 'slug', 'body', 'posted', 'category', 'enabled', "comments"]
+
 
 class BlogUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
