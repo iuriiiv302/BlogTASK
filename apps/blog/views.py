@@ -5,6 +5,7 @@ from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
+from apps.blog.serializers import BlogAllSerializer
 from .models import Category, Blog, Comments
 from .serializers import CategorySerializer, BlogSerializer, CommentsSerializer
 
@@ -16,7 +17,6 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 class BlogListView(GenericAPIView):
     serializer_class = BlogSerializer
-
     permission_classes = (AllowAny,)
     authentication_classes = ()
 
@@ -27,13 +27,13 @@ class BlogListView(GenericAPIView):
 
 class BlogItemView(GenericAPIView):
     serializer_class = BlogSerializer
-
     permission_classes = (AllowAny,)
     authentication_classes = ()
 
     def get(self, request, pk):
         blog = get_object_or_404(Blog.objects.filter(pk=pk))
-        return Response(BlogSerializer(blog).data)
+        response_data = BlogSerializer(blog).data
+        return Response(response_data)
 
 
 class BlogCreate(GenericAPIView):
@@ -44,7 +44,6 @@ class BlogCreate(GenericAPIView):
 
     @serialize_decorator(BlogSerializer)
     def post(self, request):
-
         validated_data = request.serializer.validated_data
 
         blog = Blog.objects.create(
@@ -58,9 +57,9 @@ class BlogCreate(GenericAPIView):
 
         return Response(BlogSerializer(blog).data)
 
-class CommentsCreate (GenericAPIView):
-    serializer_class = CommentsSerializer
 
+class CommentsCreate(GenericAPIView):
+    serializer_class = CommentsSerializer
     permission_classes = (AllowAny,)
     authentication_classes = ()
 
@@ -73,16 +72,4 @@ class CommentsCreate (GenericAPIView):
             comments_blog=validated_data['comments_blog'],
         )
         comments.save()
-
         return Response(CommentsSerializer(comments).data)
-
-# class CommentsDetail(GenericAPIView):
-#     serializer_class = CommentsSerializer
-#
-#     permission_classes = (AllowAny,)
-#     authentication_classes = ()
-#
-#     @serialize_decorator(CommentsSerializer)
-#     def get (self, request, blog_id):
-#         detail = get_object_or_404(Comments.objects.filter(blog_id=blog_id))
-#         return Response (CommentsSerializer(detail).data)
