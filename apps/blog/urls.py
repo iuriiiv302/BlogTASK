@@ -1,6 +1,6 @@
 from django.urls import path
 
-# from apps.blog.views import CommentsDetail
+from apps.blog.views import BlogUpdate
 from .views import CategoryViewSet, BlogListView, BlogItemView, BlogCreate, CommentsCreate
 from rest_framework.routers import DefaultRouter
 
@@ -14,9 +14,6 @@ urlpatterns += [
     path('blog/<int:pk>/', BlogItemView.as_view(), name='blog_item'),
     path('create/', BlogCreate.as_view(), name = 'create_blog'),
     path('comment/',CommentsCreate.as_view(), name= 'create_comments'),
-    # path('comment/text/',DetailComments.as_view(), name= 'comentstext'),
-    # path('comment/detai/',CommentsText.as_view(), name = 'detailcommnets'),
-    # path('comment/detail/',CommentsDetail.as_view(), name= 'views_comments'),
-
+    path('update_blog/',BlogUpdate.as_view(), name= 'update_blog'),
 
 ]

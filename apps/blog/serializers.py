@@ -27,3 +27,16 @@ class BlogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
         fields = ['title', 'slug', 'body', 'posted', 'category', 'enabled', "comments"]
+
+class BlogUpdateSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+
+    def validate_id(self, value):
+        post = Blog.objects.filter(id=value).first()
+        if not post:
+            raise ValidationError("Not exists")
+        return value
+
+    class Meta:
+        model = Blog
+        fields = ['id', 'title', 'body']
