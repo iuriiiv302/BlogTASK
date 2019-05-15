@@ -20,3 +20,17 @@ class UserInfoSerializers(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email')
+
+
+class UserUpdateSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+
+    def validate_id(self, value):
+        post = User.objects.filter(id=value).first()
+        if not post:
+            raise ValidationError("Not exists")
+        return value
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email')

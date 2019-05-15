@@ -5,7 +5,7 @@ from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from apps.users.serializers import UserSerializer, UserInfoSerializers
+from apps.users.serializers import UserSerializer, UserInfoSerializers, UserUpdateSerializer
 
 
 class RegisterUserView(GenericAPIView):
@@ -59,6 +59,7 @@ class CreateUser(GenericAPIView):
         new_user.save()
         return Response(UserSerializer(new_user).data)
 
+
 class TrueUser(GenericAPIView):
     serializer_class = UserSerializer
     permission_classes = (AllowAny,)
@@ -67,3 +68,22 @@ class TrueUser(GenericAPIView):
     def get(self, request):
         user_true = User.objects.filter(is_superuser=True)
         return Response(UserSerializer(user_true, many=True).data)
+
+
+class UpdateUser(GenericAPIView):
+    serializer_class = UserUpdateSerializer
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
+
+    def put(self, request):
+        serializer = UserUpdateSerializer(data=request.data)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            user = User.objects.get(id=data['id'])
+            user.username = data["username"]
+            user.email = data["email"]
+            user.save()
+            response_data = UserSerializer(user).data
+            return Response(response_data)
+        else:
+            return Response(serializer.errors, status=400)
