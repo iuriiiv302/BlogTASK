@@ -1,11 +1,11 @@
 from drf_util.decorators import serialize_decorator
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .models import Category, Blog, Comments
-from apps.blog.serializers import BlogUpdateSerializer, CommentsUpdateSerializer
-from .serializers import CategorySerializer, BlogSerializer, CommentsSerializer
+from apps.blog.serializers import BlogUpdateSerializer, CommentsUpdateSerializer, CategorySerializer, BlogSerializer, \
+    CommentsSerializer
 
 
 # CATEGORY__________________________________________________________________
@@ -110,6 +110,14 @@ class BlogTrue(GenericAPIView):
         return Response(BlogSerializer(blog_true, many=True).data)
 
 
+class BlogDelete(GenericAPIView):
+    serializer_class = BlogSerializer
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
+
+    def delete(self, request, pk):
+        Blog.objects.get(pk=pk).delete()
+        return Response({"status": "delete", "id": pk})
 
 # COMMENTS________________________________________________________________________________
 
