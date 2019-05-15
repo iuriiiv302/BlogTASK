@@ -29,7 +29,8 @@ class RegisterUserView(GenericAPIView):
 
         return Response(UserSerializer(user).data)
 
-class UserInfo(GenericAPIView):
+
+class InfoUser(GenericAPIView):
     serializer_class = UserInfoSerializers
     permission_classes = (AllowAny,)
     authentication_classes = ()
@@ -37,4 +38,23 @@ class UserInfo(GenericAPIView):
     def get(self, request, pk):
         user = get_object_or_404(User.objects.filter(pk=pk))
         response_data = UserInfoSerializers(user).data
-        return Response (response_data)
+        return Response(response_data)
+
+
+class CreateUser(GenericAPIView):
+    serializer_class = UserSerializer
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
+
+    @serialize_decorator(UserSerializer)
+    def post(self, request):
+        validated_data = request.serializer.validated_data
+        new_user = User.objects.create(
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            username=validated_data['username'],
+            password=validated_data['password'],
+        )
+
+        new_user.save()
+        return Response(UserSerializer(new_user).data)
