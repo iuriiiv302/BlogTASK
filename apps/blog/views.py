@@ -8,14 +8,33 @@ from apps.blog.serializers import BlogUpdateSerializer, CommentsUpdateSerializer
 from .serializers import CategorySerializer, BlogSerializer, CommentsSerializer
 
 
-# CATEGORY
+# CATEGORY__________________________________________________________________
 
 class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
 
 
-# BLOG
+class CategoryCreate(GenericAPIView):
+    serializer_class = CategorySerializer
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
+
+    @serialize_decorator(CategorySerializer)
+    def post(self, request):
+        validated_data = request.serializer.validated_data
+
+        category = Category.objects.create(
+            title=validated_data['title'],
+            slug=validated_data['slug'],
+        )
+
+        category.save()
+
+        return Response(CategorySerializer(category).data)
+
+
+# BLOG_________________________________________________________________
 class BlogListView(GenericAPIView):
     serializer_class = BlogSerializer
     permission_classes = (AllowAny,)
@@ -80,7 +99,19 @@ class BlogUpdate(GenericAPIView):
         else:
             return Response(serializer.errors, status=400)
 
-# COMENTS
+
+class BlogTrue(GenericAPIView):
+    serializer_class = BlogSerializer
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
+
+    def get(self, request):
+        blog_true = Blog.objects.filter(enabled=True)
+        return Response(BlogSerializer(blog_true, many=True).data)
+
+
+
+# COMMENTS________________________________________________________________________________
 
 class CommentsCreate(GenericAPIView):
     serializer_class = CommentsSerializer
