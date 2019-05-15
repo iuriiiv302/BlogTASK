@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from apps.users.views import InfoUser, RegisterUserView, CreateUser, TrueUser, UpdateUser
+from apps.users.views import InfoUser, RegisterUserView, CreateUser, TrueUser, UpdateUser, DeleteUser
 
 urlpatterns = [
     path('register/', RegisterUserView.as_view(), name='token_register'),
@@ -15,4 +15,5 @@ urlpatterns = [
     path('create/', CreateUser.as_view(), name = "create_user"),
     path('status/true/', TrueUser.as_view(), name = "user_status_super_user"),
     path('update/', UpdateUser.as_view(), name = "update_user"),
+    path('delete/<int:pk>/', DeleteUser.as_view(), name = "delete_user"),
 ]

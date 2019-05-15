@@ -87,3 +87,13 @@ class UpdateUser(GenericAPIView):
             return Response(response_data)
         else:
             return Response(serializer.errors, status=400)
+
+
+class DeleteUser(GenericAPIView):
+    serializer_class = UserSerializer
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
+
+    def delete(self, request, pk):
+        User.objects.get(pk=pk).delete()
+        return Response({"status": "delete", "id": pk})
