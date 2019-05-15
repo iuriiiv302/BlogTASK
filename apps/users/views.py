@@ -58,3 +58,12 @@ class CreateUser(GenericAPIView):
 
         new_user.save()
         return Response(UserSerializer(new_user).data)
+
+class TrueUser(GenericAPIView):
+    serializer_class = UserSerializer
+    permission_classes = (AllowAny,)
+    authentication_classes = ()
+
+    def get(self, request):
+        user_true = User.objects.filter(is_superuser=True)
+        return Response(UserSerializer(user_true, many=True).data)
